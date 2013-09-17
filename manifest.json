@@ -3,15 +3,15 @@
    "background": { "page": "bg.html" },
    "browser_action": {
       "default_icon": "revolver_t_19.png",
-      "default_title": "Revolver - Tabs - Automatically rotate through open tabs."
+      "default_title": "Tabs Revolver Plus"
    },
-   "description": "Automatically rotate through open tabs. By Ben Hedrington",
+   "description": "Automatically rotate through open tabs.",
    "icons": {
       "128": "revolver_t_128.png",
       "48": "revolver_t_48.png"
    },
-   "name": "Revolver - Tabs",
+   "name": "Tabs Revolver Plus",
    "options_page": "options.html",
    "permissions": [ "tabs", "idle" ],
-   "version": "0.6"
+   "version": "0.1"
 }
