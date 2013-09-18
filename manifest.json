@@ -2,15 +2,15 @@
    "manifest_version": 2,
    "background": { "page": "bg.html" },
    "browser_action": {
-      "default_icon": "revolver_t_19.png",
-      "default_title": "Tabs Revolver Plus"
+      "default_icon": "icon_24.png",
+      "default_title": "Tab Rotator"
    },
    "description": "Automatically rotate through open tabs.",
    "icons": {
-      "128": "revolver_t_128.png",
-      "48": "revolver_t_48.png"
+      "96": "icon_96.png",
+      "48": "icon_48.png"
    },
-   "name": "Tabs Revolver Plus",
+   "name": "Tab Rotator",
    "options_page": "options.html",
    "permissions": [ "tabs", "idle" ],
    "version": "0.1"
