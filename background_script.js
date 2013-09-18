@@ -1,9 +1,9 @@
 // Global Variables - When possible pulling form Local Storage set via Options page.
 var activeWindows = [];
-var timeDelay = 10000;
+var defaultTimeDelay = 10000;
 
 if (localStorage["seconds"]) {
-  timeDelay = (localStorage["seconds"] * 1000);
+  defaultTimeDelay = (localStorage["seconds"] * 1000);
 }
 
 var tabReload = true;
@@ -69,7 +69,7 @@ chrome.browserAction.onClicked.addListener(function (tab) {
   if (activeInWindow(windowId)) {
     stop(windowId);
   } else {
-    go(windowId);
+    go(tab);
   }
 });
 
@@ -104,13 +104,12 @@ function badgeTabs(windowId, text) {
 
 // Start on a specific window
 
-function go(windowId) {
-  if (localStorage["seconds"]) {
-    timeDelay = (localStorage["seconds"] * 1000);
-  }
+function go(tab) {
+  windowId = tab.windowId;
+
   moverInteval = setTimeout(function () {
     moveTabIfIdle();
-  }, timeDelay);
+  }, getTabTime(tab));
   
   activeWindows.push(windowId);
   badgeTabs(windowId, 'on');
@@ -151,17 +150,18 @@ function activateTab(tab) {
   }
 }
 
+function getTabTime(tab) {
+  return (tab.index < tabIntervalList.length) ? tabIntervalList[tab.index] : defaultTimeDelay;
+}
+
 function selectTab(tab) {
   chrome.tabs.update(tab.id, {
     selected: true
   });
 
-  currentTabTimeDelay = (tab.index < tabIntervalList.length) ? tabIntervalList[tab.index] : timeDelay;
-
-  console.log("Current time delay : " + currentTabTimeDelay + ", Tab ID : " + tab.id);
   moverInteval = setTimeout(function () {
     moveTabIfIdle();
-  }, currentTabTimeDelay);
+  }, getTabTime(tab));
 }
 
 // Call moveTab if the user isn't actually interacting with the browser
@@ -215,7 +215,7 @@ if (tabAutostart) {
     },
     function (tabs) {
       //Start Revolver Tabs in main window.
-      go(tabs[0].windowId);
+      go(tabs[0]);
     }
   );
 }
