@@ -31,8 +31,17 @@
     </div>
     <div id="settings">
       <p>
-        <label for="seconds">Default interval in seconds:</label> <input type="text" name="seconds" id="seconds" style="width:30px;"><span class="example">The number of seconds to show a tab before switching ex. <strong>10</strong></span>
+        <label for="seconds">Default interval in seconds:</label> 
+        <input type="text" name="seconds" id="seconds" style="width:30px;">
+        <span class="example">
+          The number of seconds to show a tab before switching ex. <strong>10</strong>
+        </span>
       </p>
+      <p>
+        <label for="tabIntervalList">Tab specific time :</label>
+        <input type="text" name="tabIntervalList" id="tabIntervalList" style="width:100px;">    
+        <span class="example">Tab specific time in seconds, separate values by comma. <strong>ex: 20,40,10</strong></span>
+      </p>      
       <p>
         <label for="autostart">Auto Start:</label> <input type="checkbox" name="autostart" id="autostart"><span class="example">Automatically start Revolver Tabs on browser startup.</span>
       </p>
@@ -43,11 +52,6 @@
         <label for="noRefreshList">Blacklist for URLs that should not be reloaded:</label><br/>
         <textarea name="noRefreshList" id="noRefreshList" rows="10" cols="80">
         </textarea><span class="example">The list should have full URLs, each separated by a new line</span>
-      </p>
-      <p>
-        <label for="tabIntervalList">Tab specific time :</label><br/>
-        <textarea name="tabIntervalList" id="tabIntervalList" rows="10" cols="80"></textarea>
-        <span class="example">The list should have full URL and its time to display separated by :: and each URL separated by a new line. <strong>ex: http://www.google.com::20</strong></span>
       </p>
       <p>
         <label for="inactive">Rotate only when inactive:</label> <input type="checkbox" name="inactive" id="inactive"><span class="example"><strong>Rotation will pause</strong> if the browser has been interacted with within 15 seconds.</span>

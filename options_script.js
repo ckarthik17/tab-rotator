@@ -31,10 +31,7 @@ function save_options() {
   );
   bg.noRefreshList = document.getElementById('noRefreshList').value.split('\n');
 
-  var tabIntervalList = JSON.stringify(
-    document.getElementById('tabIntervalList').value.split('\n')
-  );
-  
+  localStorage["tabIntervalList"] = document.getElementById('tabIntervalList').value;
   
   // Update status to let user know options were saved.
   var status = document.getElementById("status");
@@ -86,6 +83,11 @@ function restore_options() {
     document.getElementById("noRefreshList").value = JSON.parse(localStorage["noRefreshList"]).join("\n");
   } else {
     document.getElementById("noRefreshList").value = "";
+  }
+  if (localStorage["tabIntervalList"]) {
+    document.getElementById("tabIntervalList").value = localStorage["tabIntervalList"];
+  } else {
+    document.getElementById("tabIntervalList").value = "";
   }
 }
 

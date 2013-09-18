@@ -1,5 +1,5 @@
 // Global Variables - When possible pulling form Local Storage set via Options page.
-var activeWindows = new Array();
+var activeWindows = [];
 var timeDelay = 10000;
 
 if (localStorage["seconds"]) {
@@ -35,6 +35,14 @@ if (localStorage["autostart"]) {
 var noRefreshList = [];
 if (localStorage["noRefreshList"]) {
   noRefreshList = JSON.parse(localStorage["noRefreshList"]);
+}
+
+var tabIntervalList = [];
+if (localStorage["tabIntervalList"]) {
+  tabIntervalList = localStorage["tabIntervalList"].split(',');
+  tabIntervalList = tabIntervalList.map(function(value) {
+    return value * 1000;
+  });
 }
 
 function include(arr, obj) {
@@ -100,10 +108,10 @@ function go(windowId) {
   if (localStorage["seconds"]) {
     timeDelay = (localStorage["seconds"] * 1000);
   }
-  moverInteval = setInterval(function () {
-    moveTabIfIdle()
+  moverInteval = setTimeout(function () {
+    moveTabIfIdle();
   }, timeDelay);
-  console.log('Starting: timeDelay:' + timeDelay + ' reload:' + tabReload + ' inactive:' + tabInactive);
+  
   activeWindows.push(windowId);
   badgeTabs(windowId, 'on');
 }
@@ -134,17 +142,26 @@ function activateTab(tab) {
       function activateTabCallback(tabId, info) {
         if (info.status == "complete" && tabId == tab.id) {
           chrome.tabs.onUpdated.removeListener(activateTabCallback);
-          chrome.tabs.update(tabId, {
-            selected: true
-          });
+          selectTab(tab);
         }
       });
   } else {
     // Swich Tab right away
-    chrome.tabs.update(tab.id, {
-      selected: true
-    });
+    selectTab(tab);
   }
+}
+
+function selectTab(tab) {
+  chrome.tabs.update(tab.id, {
+    selected: true
+  });
+
+  currentTabTimeDelay = (tab.index < tabIntervalList.length) ? tabIntervalList[tab.index] : timeDelay;
+
+  console.log("Current time delay : " + currentTabTimeDelay + ", Tab ID : " + tab.id);
+  moverInteval = setTimeout(function () {
+    moveTabIfIdle();
+  }, currentTabTimeDelay);
 }
 
 // Call moveTab if the user isn't actually interacting with the browser
