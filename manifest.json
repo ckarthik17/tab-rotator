@@ -7,8 +7,9 @@
    },
    "description": "Automatically rotate through open tabs.",
    "icons": {
+      "48": "icon_48.png",
       "96": "icon_96.png",
-      "48": "icon_48.png"
+      "128": "icon_96.png"
    },
    "name": "Tab Rotator",
    "options_page": "options.html",
