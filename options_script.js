@@ -4,7 +4,8 @@ var bg = chrome.extension.getBackgroundPage();
 
 function save_options() {
   localStorage["seconds"] = document.getElementById("seconds").value;
-  bg.timeDelay = (document.getElementById("seconds").value * 1000);
+  bg.defaultTimeDelay = (document.getElementById("seconds").value * 1000);
+  
   if (document.getElementById("reload").checked == true) {
     localStorage["reload"] = 'true';
     bg.tabReload = true;
@@ -32,7 +33,8 @@ function save_options() {
   bg.noRefreshList = document.getElementById('noRefreshList').value.split('\n');
 
   localStorage["tabIntervalList"] = document.getElementById('tabIntervalList').value;
-  
+  bg.updateTabInterval();
+
   // Update status to let user know options were saved.
   var status = document.getElementById("status");
   var status2 = document.getElementById("status2");

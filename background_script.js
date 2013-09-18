@@ -1,6 +1,7 @@
 // Global Variables - When possible pulling form Local Storage set via Options page.
 var activeWindows = [];
 var defaultTimeDelay = 10000;
+var moverInteval;
 
 if (localStorage["seconds"]) {
   defaultTimeDelay = (localStorage["seconds"] * 1000);
@@ -38,11 +39,16 @@ if (localStorage["noRefreshList"]) {
 }
 
 var tabIntervalList = [];
-if (localStorage["tabIntervalList"]) {
-  tabIntervalList = localStorage["tabIntervalList"].split(',');
-  tabIntervalList = tabIntervalList.map(function(value) {
-    return value * 1000;
-  });
+updateTabInterval();
+
+function updateTabInterval() {
+  if (localStorage["tabIntervalList"]) {
+    tabIntervalList = localStorage["tabIntervalList"].split(',');
+    tabIntervalList = tabIntervalList.map(function(value) {
+      return value * 1000;
+    });
+  } else { tabIntervalList = []; }
+  console.log("Tab specific time updated : " + tabIntervalList);
 }
 
 function include(arr, obj) {
@@ -103,23 +109,27 @@ function badgeTabs(windowId, text) {
 }
 
 // Start on a specific window
-
 function go(tab) {
   windowId = tab.windowId;
-
-  moverInteval = setTimeout(function () {
-    moveTabIfIdle();
-  }, getTabTime(tab));
   
+  console.log("Tab Rotator - Started");
+  scheduleSwitch(tab);
+
   activeWindows.push(windowId);
   badgeTabs(windowId, 'on');
 }
 
-// Stop on a specific window
+function scheduleSwitch(tab) {
+  console.log("Tab index : " + tab.index + ", Time : " + getTabTime(tab));
+  moverInteval = setTimeout(function () {
+    moveTabIfIdle(tab);
+  }, getTabTime(tab));
+}
 
+// Stop on a specific window
 function stop(windowId) {
   clearInterval(moverInteval);
-  console.log('Stopped.');
+  console.log('Tab Rotator - Stopped.');
   var index = activeWindows.indexOf(windowId);
   if (index >= 0) {
     activeWindows.splice(index);
@@ -151,7 +161,8 @@ function activateTab(tab) {
 }
 
 function getTabTime(tab) {
-  return (tab.index < tabIntervalList.length) ? tabIntervalList[tab.index] : defaultTimeDelay;
+  value = (tab.index < tabIntervalList.length) ? tabIntervalList[tab.index] : defaultTimeDelay;
+  return isNaN(value) ? defaultTimeDelay : value;
 }
 
 function selectTab(tab) {
@@ -159,14 +170,12 @@ function selectTab(tab) {
     selected: true
   });
 
-  moverInteval = setTimeout(function () {
-    moveTabIfIdle();
-  }, getTabTime(tab));
+  scheduleSwitch(tab);
 }
 
 // Call moveTab if the user isn't actually interacting with the browser
 
-function moveTabIfIdle() {
+function moveTabIfIdle(tab) {
   if (tabInactive) {
     // 15 is the lowest allowable number of seconds for this call
     // If you try lower, Chrome complains
@@ -182,6 +191,7 @@ function moveTabIfIdle() {
           color: [0, 0, 255, 100]
         });
         console.log('Browser was active, waiting.');
+        scheduleSwitch(tab);
       }
     });
   } else {
